@@ -1,9 +1,9 @@
 "use client"
 // pages/faqs.tsx
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { NextPage } from "next";
 import Head from "next/head";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import {
   Accordion,
   AccordionItem,
@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import { LucideSearch } from "lucide-react";
 
 type FAQ = {
@@ -61,20 +60,20 @@ const faqList: FAQ[] = [
     answer:
       "Yes. Subscribe via the Newsletter section on our site to receive updates on new products, promotions, and events.",
   },
-  // Add more FAQs as needed
 ];
 
-const containerVariant = {
+const containerVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
-  visible: (i = 1) => ({
+  visible: (custom: number = 1) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: 0.1 * i, duration: 0.4 },
+    transition: { delay: 0.1 * custom, duration: 0.4 },
   }),
 };
 
 const FAQPage: NextPage = () => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
+
   const filteredFAQs = useMemo(() => {
     const term = searchTerm.trim().toLowerCase();
     if (!term) return faqList;
@@ -88,16 +87,17 @@ const FAQPage: NextPage = () => {
       <Head>
         <title>FAQs</title>
       </Head>
+
       <motion.div
         className="container mx-auto px-4 py-16"
         initial="hidden"
         animate="visible"
-        variants={containerVariant}
+        variants={containerVariants}
         custom={0}
       >
         <motion.h1
           className="text-3xl sm:text-4xl font-bold text-center mb-8"
-          variants={containerVariant}
+          variants={containerVariants}
           custom={1}
         >
           Frequently Asked Questions
@@ -105,7 +105,7 @@ const FAQPage: NextPage = () => {
 
         <motion.div
           className="max-w-md mx-auto mb-12"
-          variants={containerVariant}
+          variants={containerVariants}
           custom={2}
         >
           <Label htmlFor="faq-search" className="sr-only">
@@ -130,24 +130,25 @@ const FAQPage: NextPage = () => {
         {filteredFAQs.length === 0 ? (
           <motion.p
             className="text-center text-gray-600"
-            variants={containerVariant}
+            variants={containerVariants}
             custom={3}
           >
             No matching questions found.
           </motion.p>
         ) : (
-          <motion.div
-            variants={containerVariant}
-            custom={3}
-          >
+          <motion.div variants={containerVariants} custom={3}>
             <Accordion type="single" collapsible className="space-y-4">
               {filteredFAQs.map((faq, idx) => (
-                <AccordionItem key={idx} value={`item-${idx}`} className="border rounded-lg">
+                <AccordionItem
+                  key={idx}
+                  value={`item-${idx}`}
+                  className="border rounded-lg"
+                >
                   <motion.div
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, amount: 0.3 }}
-                    variants={containerVariant}
+                    variants={containerVariants}
                     custom={idx + 4}
                   >
                     <AccordionTrigger className="flex justify-between w-full px-4 py-3 text-left">
