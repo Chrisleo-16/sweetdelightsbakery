@@ -15,25 +15,25 @@ export default function FeaturedProducts() {
   const { toast } = useToast()
   const BASE_URL = process.env.NEXT_PUBLIC_API_URL || ""
 
-  useEffect(() => {
-    const fetchAll = async () => {
-      setIsLoading(true)
-      try {
-        const data = await getProducts() // no params: fetch all
-        setProducts(data.products)
-      } catch (error) {
-        console.error("Failed to fetch products:", error)
-        toast({
-          title: "Error",
-          description: "Could not load featured products.",
-          variant: "destructive",
-        })
-      } finally {
-        setIsLoading(false)
-      }
+useEffect(() => {
+  const fetchAll = async () => {
+    setIsLoading(true);
+    try {
+      const data = await getProducts(); // fetch all products
+      setProducts(Array.isArray(data.products) ? data.products : []);
+    } catch (error) {
+      console.error("Failed to fetch products:", error);
+      toast({
+        title: "Error",
+        description: "Could not load featured products.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
-    fetchAll()
-  }, [toast])
+  };
+  fetchAll();
+}, [toast]);
 
   if (isLoading) {
     return (
