@@ -1,5 +1,5 @@
-"use client"
-// pages/index.tsx
+"use client";
+
 import { useEffect, useState } from "react";
 import { NextPage } from "next";
 import Link from "next/link";
@@ -14,8 +14,7 @@ import FeaturedProducts from "@/components/featured-products";
 import ProductRecommendations from "@/components/product-recommendations";
 
 const Home: NextPage = () => {
-  const [showScrollTop, setShowScrollTop] = useState<boolean>(false);
-  // const [isLoaded, setIsLoaded] = useState(false)
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,15 +22,12 @@ const Home: NextPage = () => {
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-    // setIsLoaded(true);
   }, []);
-  // if (!isLoaded) return null
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // framer-motion variants
   const fadeUpVariant = {
     hidden: { opacity: 0, y: 40 },
     visible: { opacity: 1, y: 0 },
@@ -41,7 +37,6 @@ const Home: NextPage = () => {
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
       <section className="relative h-[600px] sm:h-[700px] md:h-[800px] w-full overflow-hidden">
-        {/* Background image */}
         <div className="absolute inset-0">
           <Image
             src="/bf41aa06c779b8e46de8c784de052b49.jpg"
@@ -52,7 +47,7 @@ const Home: NextPage = () => {
           />
           <div className="absolute inset-0 bg-black/50" />
         </div>
-        {/* Content */}
+
         <div className="relative z-10 container mx-auto px-4 h-full flex items-center">
           <div className="max-w-2xl">
             <motion.h1
@@ -91,7 +86,11 @@ const Home: NextPage = () => {
                 </Button>
               </Link>
               <Link href="/products" passHref>
-                <Button variant="outline" asChild className="border-white/30 text-white hover:bg-white/20 bg-white/10">
+                <Button
+                  variant="outline"
+                  asChild
+                  className="border-white/30 text-white hover:bg-white/20 bg-white/10"
+                >
                   View Menu
                 </Button>
               </Link>
@@ -104,24 +103,14 @@ const Home: NextPage = () => {
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center gap-8">
-            <motion.div
-              className="w-full md:w-1/2 relative h-64 md:h-80 lg:h-96"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.3 }}
-              variants={{
-                hidden: { opacity: 0, x: -50 },
-                visible: { opacity: 1, x: 0 },
-              }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
+            <div className="w-full md:w-1/2 relative h-64 md:h-80 lg:h-96">
               <Image
                 src="/ef845826de8a8e12574692fef99cfd44.jpg"
                 alt="About Us"
                 fill
                 className="object-cover rounded-2xl shadow-lg"
               />
-            </motion.div>
+            </div>
             <motion.div
               className="w-full md:w-1/2"
               initial="hidden"
@@ -168,45 +157,6 @@ const Home: NextPage = () => {
       >
         <FeaturedProducts />
       </motion.div>
-
-      {/* Recently Viewed / Recommendations (optional) */}
-      {/*
-      <motion.section
-        className="container mx-auto px-4 py-12"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
-        variants={fadeUpVariant}
-        transition={{ duration: 0.6, delay: 0.2 }}
-      >
-        <ProductRecommendations type="recently-viewed" title="Continue Shopping" maxItems={4} />
-      </motion.section>
-      */}
-
-      {/* Optional Testimonial or Newsletter */}
-      {/*
-      <motion.div
-        className="container mx-auto px-4 py-12"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
-        variants={fadeUpVariant}
-        transition={{ duration: 0.6, delay: 0.2 }}
-      >
-        <TestimonialSection />
-      </motion.div>
-      <motion.div
-        className="container mx-auto px-4 py-12"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
-        variants={fadeUpVariant}
-        transition={{ duration: 0.6, delay: 0.2 }}
-      >
-        <NewsletterSection />
-      </motion.div>
-      */}
-
 
       {/* Scroll-to-Top Button */}
       {showScrollTop && (
