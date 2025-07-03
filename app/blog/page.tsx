@@ -1,3 +1,4 @@
+"use client"
 // pages/faqs.tsx
 import { useState, useMemo } from "react";
 import { NextPage } from "next";
