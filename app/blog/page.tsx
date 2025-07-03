@@ -1,4 +1,3 @@
-"use client"
 // pages/faqs.tsx
 import React, { useState, useMemo } from "react";
 import { NextPage } from "next";
@@ -144,20 +143,12 @@ const FAQPage: NextPage = () => {
                   value={`item-${idx}`}
                   className="border rounded-lg"
                 >
-                  <motion.div
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, amount: 0.3 }}
-                    variants={containerVariants}
-                    custom={idx + 4}
-                  >
-                    <AccordionTrigger className="flex justify-between w-full px-4 py-3 text-left">
-                      {faq.question}
-                    </AccordionTrigger>
-                    <AccordionContent className="px-4 pb-4 text-gray-700">
-                      {faq.answer}
-                    </AccordionContent>
-                  </motion.div>
+                  <AccordionTrigger className="flex justify-between w-full px-4 py-3 text-left">
+                    {faq.question}
+                  </AccordionTrigger>
+                  <AccordionContent className="px-4 pb-4 text-gray-700">
+                    {faq.answer}
+                  </AccordionContent>
                 </AccordionItem>
               ))}
             </Accordion>
