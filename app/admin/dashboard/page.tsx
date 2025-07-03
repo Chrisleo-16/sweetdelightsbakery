@@ -44,7 +44,7 @@ interface Product {
   name: string
   description: string
   price: number
-  category: string
+  category_name: string
   image: string
   stock: number
   lowStockThreshold: number
