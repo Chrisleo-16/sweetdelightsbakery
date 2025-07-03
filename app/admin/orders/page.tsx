@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import AdminLayout from "@/components/admin-layout"
-import { apiClient } from "@/lib/api"
+import { getOrders } from "@/utils/api"
 import { useToast } from "@/hooks/use-toast"
 
 interface Order {
@@ -63,7 +63,7 @@ export default function OrdersPage() {
   const loadOrders = async () => {
     setIsLoading(true)
     try {
-      const response = await apiClient.getOrders()
+      const response = await getOrders()
       if (response.data) {
         setOrders(response.data)
       }
