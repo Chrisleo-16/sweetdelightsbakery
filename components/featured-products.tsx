@@ -49,7 +49,7 @@ useEffect(() => {
   const featuredProductsList = products
     .filter(p => p.isActive && p.stock > 0)
     .sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0))
-    .slice(0, 4)
+    .slice(0, 20)
 
   return (
     <section className="py-16 bg-gray-50">
