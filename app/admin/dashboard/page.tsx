@@ -90,7 +90,7 @@ export default function AdminDashboard() {
     }
     const role = typeof window !== "undefined" ? localStorage.getItem("role") : null
     if (role !== "admin") {
-      router.push("/")
+      window.location.replace("/account/login")
     }
   }, [token, router])
 
