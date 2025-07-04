@@ -41,7 +41,7 @@ export default function Footer() {
                   Contact Us
                 </Link>
               </li>
-              <li>
+{/*               <li>
                 <Link href="/faq" className="text-amber-200 hover:text-white transition-colors">
                   FAQ
                 </Link>
@@ -50,7 +50,7 @@ export default function Footer() {
                 <Link href="/blog" className="text-amber-200 hover:text-white transition-colors">
                   Blog
                 </Link>
-              </li>
+              </li> */}
               {/* <li>
                 <Link href="/careers" className="text-amber-200 hover:text-white transition-colors">
                   Careers
