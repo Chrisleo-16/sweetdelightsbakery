@@ -1,5 +1,5 @@
 import api from "./axios";
-
+import axios from 'axios'
 export interface SignUpData{
     firstName: string;
     lastName: string;
@@ -149,27 +149,36 @@ export interface AnalyticsResponse {
   }
 }
 export interface MpesaPaymentResponse {
-  message: string
+  ResponseCode: string
+  ResponseDescription: string
+  MerchantRequestID: string
+  CheckoutRequestID: string
+  CustomerMessage: string
 }
 
-// 1) Trigger an STK Push
 export const mpesaPayment = async (
   amount: number,
   phone: string
 ): Promise<MpesaPaymentResponse> => {
-  // we send as form‐urlencoded so that Flask’s request.form[...] works
+  // build a URLSearchParams and then .toString() to get the correct form body
   const payload = new URLSearchParams()
-  payload.append("amount", amount.toString())
-  payload.append("phone", phone)
+  payload.append('amount', amount.toString())
+  payload.append('phone', phone)
 
-  const resp = await api.post<MpesaPaymentResponse>(
-    "/mpesa_payment",
-    payload,
-    {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-    }
-  )
-  return resp.data
+  try {
+    const resp = await axios.post<MpesaPaymentResponse>(
+      'https://sweetiebake.pythonanywhere.com/api/mpesa_payment',
+      payload.toString(),               // ← stringify the params
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      }
+    )
+    return resp.data
+  } catch (err: any) {
+    console.error('mpesaPayment failed:', err.response?.data || err.message)
+    // re‑throw or wrap in your own error type if you like
+    throw err
+  }
 }
