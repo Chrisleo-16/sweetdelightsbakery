@@ -2,7 +2,7 @@
 
 import React, { useContext, useState } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -13,15 +13,19 @@ import { unifiedLogin } from "@/utils/api"
 
 export default function LoginPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { setToken } = useContext(AuthContext)
+
   const [identifier, setIdentifier] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
-  const [rememberMe, setRememberMe] = useState(false) // state for the checkbox
+  const [rememberMe, setRememberMe] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // Handler for checkbox change
+  // Grab the 'next' redirect target from URL, if any:
+  const nextUrl = searchParams.get("next")
+
   const handleCheckboxChange = (checked: boolean) => {
     setRememberMe(checked)
   }
@@ -34,7 +38,7 @@ export default function LoginPage() {
     try {
       const data = await unifiedLogin(identifier.trim(), password)
 
-      // Store token and role based on rememberMe
+      // Store token & role
       if (rememberMe) {
         localStorage.setItem("access_token", data.access_token)
         localStorage.setItem("role", data.role)
@@ -44,12 +48,14 @@ export default function LoginPage() {
       }
       setToken(data.access_token)
 
-      // Redirect based on role
-      if (data.role === "admin") {
-        router.push("/admin/dashboard")
-      } else {
-        router.push("/account/profile")
-      }
+      // Decide final redirect:
+      // 1. If a nextUrl was supplied, go there
+      // 2. Otherwise fall back to role-based default
+      const destination =
+        nextUrl ||
+        (data.role === "admin" ? "/admin/dashboard" : "/account")
+
+      router.push(destination)
     } catch (err: any) {
       console.error(err)
       const msg = err.response?.data?.error || err.message || "Login Failed"
@@ -69,16 +75,14 @@ export default function LoginPage() {
       <div className="max-w-md mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold">Welcome Back</h1>
-          <p className="text-gray-600 mt-2">Sign in to your Sweet Delights account</p>
+          <p className="text-gray-600 mt-2">
+            Sign in to your Sweet Delights account
+          </p>
         </div>
 
         <div className="bg-white p-8 rounded-lg shadow-md">
           <form onSubmit={handleSubmit} className="space-y-6">
-            {error && (
-              <div className="text-red-600 text-sm">
-                {error}
-              </div>
-            )}
+            {error && <div className="text-red-600 text-sm">{error}</div>}
 
             <div className="space-y-2">
               <Label htmlFor="identifier">Email or Username</Label>
@@ -86,7 +90,7 @@ export default function LoginPage() {
                 id="identifier"
                 name="identifier"
                 type="text"
-                placeholder="your@email.com"
+                placeholder="you@example.com"
                 value={identifier}
                 onChange={(e) => setIdentifier(e.target.value)}
                 required
@@ -96,7 +100,10 @@ export default function LoginPage() {
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <Label htmlFor="password">Password</Label>
-                <Link href="/account/forgot-password" className="text-sm text-amber-600 hover:text-amber-700">
+                <Link
+                  href="/account/forgot-password"
+                  className="text-sm text-amber-600 hover:text-amber-700"
+                >
                   Forgot password?
                 </Link>
               </div>
@@ -110,7 +117,6 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
-                {/* Toggle show/hide password */}
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
@@ -144,7 +150,13 @@ export default function LoginPage() {
           <div className="mt-6 pt-6 border-t border-gray-200 text-center">
             <p className="text-gray-600">
               Don't have an account?{" "}
-              <Link href="/account/register" className="text-amber-600 hover:text-amber-700 font-medium">
+              <Link
+                href={{
+                  pathname: "/account/register",
+                  query: nextUrl ? { next: nextUrl } : undefined,
+                }}
+                className="text-amber-600 hover:text-amber-700 font-medium"
+              >
                 Sign up
               </Link>
             </p>
