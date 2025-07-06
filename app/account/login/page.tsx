@@ -1,8 +1,8 @@
 "use client"
 
-import React, { useContext, useState } from "react"
+import React, { useContext, useState, useEffect } from "react"
 import Link from "next/link"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -13,7 +13,6 @@ import { unifiedLogin } from "@/utils/api"
 
 export default function LoginPage() {
   const router = useRouter()
-  const searchParams = useSearchParams()
   const { setToken } = useContext(AuthContext)
 
   const [identifier, setIdentifier] = useState("")
@@ -23,8 +22,12 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // Grab the 'next' redirect target from URL, if any:
-  const nextUrl = searchParams.get("next")
+  // track the `next` query param without useSearchParams
+  const [nextUrl, setNextUrl] = useState<string | null>(null)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    setNextUrl(params.get("next"))
+  }, [])
 
   const handleCheckboxChange = (checked: boolean) => {
     setRememberMe(checked)
@@ -38,7 +41,7 @@ export default function LoginPage() {
     try {
       const data = await unifiedLogin(identifier.trim(), password)
 
-      // Store token & role
+      // persist token & role
       if (rememberMe) {
         localStorage.setItem("access_token", data.access_token)
         localStorage.setItem("role", data.role)
@@ -48,12 +51,9 @@ export default function LoginPage() {
       }
       setToken(data.access_token)
 
-      // Decide final redirect:
-      // 1. If a nextUrl was supplied, go there
-      // 2. Otherwise fall back to role-based default
+      // decide redirect target
       const destination =
-        nextUrl ||
-        (data.role === "admin" ? "/admin/dashboard" : "/account")
+        nextUrl || (data.role === "admin" ? "/admin/dashboard" : "/account/profile")
 
       router.push(destination)
     } catch (err: any) {
@@ -119,7 +119,7 @@ export default function LoginPage() {
                 />
                 <button
                   type="button"
-                  onClick={() => setShowPassword((prev) => !prev)}
+                  onClick={() => setShowPassword((p) => !p)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
                 >
                   {showPassword ? "Hide" : "Show"}
