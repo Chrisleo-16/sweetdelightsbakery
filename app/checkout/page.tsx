@@ -196,26 +196,40 @@ export default function CheckoutPage() {
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!validateForm()) return
-    setIsProcessing(true)
+  e.preventDefault();
+  if (!validateForm()) return;
+  setIsProcessing(true);
 
-    try {
-      const resp = await mpesaPayment(total, formData.mpesaPhone)
-      toast({ title: "M-PESA Prompt Sent", description: resp.message })
-      clearCart()
-      setTimeout(() => router.push("/order-confirmation"), 1000)
-    } catch (err: any) {
-      console.error("MPESA payment failed:", err)
-      toast({
-        title: "Payment Failed",
-        description: err?.response?.data?.error || err.message || "Try again",
-        variant: "destructive",
-      })
-    } finally {
-      setIsProcessing(false)
-    }
+  try {
+    // total: number, mpesaPhone: string
+    const resp = await mpesaPayment(total, formData.mpesaPhone);
+
+    // Safaricom returns a "CustomerMessage" field
+    toast({
+      title: "M-PESA Prompt Sent",
+      description: resp.CustomerMessage || resp.ResponseDescription,
+    });
+
+    clearCart();
+    setTimeout(() => router.push("/order-confirmation"), 1000);
+  } catch (err: any) {
+    console.error("MPESA payment failed:", err);
+
+    // show either your Flask-side error or the HTTP error
+    const serverError =
+      err.response?.data?.error ||
+      err.response?.data?.details ||
+      err.message;
+
+    toast({
+      title: "Payment Failed",
+      description: serverError,
+      variant: "destructive",
+    });
+  } finally {
+    setIsProcessing(false);
   }
+};
 
   if (cartItems.length === 0) {
     return (
