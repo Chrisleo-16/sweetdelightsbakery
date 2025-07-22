@@ -53,7 +53,7 @@ export default function LoginPage() {
 
       // decide redirect target
       const destination =
-        nextUrl || (data.role === "admin" ? "/admin/dashboard" : "/account/profile")
+        nextUrl || (data.role === "admin" ? "/admin/dashboard" : "/account")
 
       router.push(destination)
     } catch (err: any) {
