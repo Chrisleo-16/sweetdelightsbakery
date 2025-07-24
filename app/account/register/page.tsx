@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { toast } from "@/hooks/use-toast"
+import { signup } from "@/utils/api"
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -46,15 +47,31 @@ export default function RegisterPage() {
 
     setIsLoading(true)
 
-    // Simulate API call
-    setTimeout(() => {
+    try{
+      const {firstName, lastName, email, password } = formData
+      await signup({ firstName, lastName, email, password })
       toast({
         title: "Registration successful",
-        description: "Welcome to Sweet Delights!",
+        description: "Welcome to Sweet Delights"
       })
-      router.push("/")
+      router.push("/account")
+    }catch(error: any){
+      toast({
+        title: "Registration failed",
+        description: error?.response?.data?.message || "Something went wrong. Please try again",
+        variant: "destructive"
+      })
+    } finally{
       setIsLoading(false)
-    }, 1500)
+    }
+    setFormData({
+      firstName:"",
+      lastName:"",
+      email:"",
+      password:"",
+      confirmPassword:"",
+      agreeTerms:false,
+    })
   }
 
   return (
