@@ -168,7 +168,7 @@ export default function ProductDetailPage() {
         <div className="space-y-4">
           <div className="relative overflow-hidden rounded-lg">
             <img
-              src={product.image || "/placeholder.svg"}
+              src={`https://echoschribbie.pythonanywhere.com/uploads/${product.images}`  || "/placeholder.svg"}
               alt={product.name}
               className="w-full h-96 object-cover"
             />
@@ -261,7 +261,7 @@ export default function ProductDetailPage() {
                   size="lg"
                 >
                   <ShoppingCart className="h-5 w-5 mr-2" />
-                  Add to Cart - ${(product.price * quantity).toFixed(2)}
+                  Add to Cart - KSH{(product.price * quantity).toFixed(2)}
                 </Button>
                 <Button
                   variant="outline"
