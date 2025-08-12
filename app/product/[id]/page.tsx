@@ -206,7 +206,7 @@ export default function ProductDetailPage() {
           </div>
 
           <p className="text-2xl font-bold text-amber-600">
-            ${product.price.toFixed(2)}
+            KSH:{product.price.toFixed(2)}
           </p>
           <p className="text-gray-700 leading-relaxed">{product.description}</p>
 
