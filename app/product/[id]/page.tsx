@@ -168,7 +168,7 @@ export default function ProductDetailPage() {
         <div className="space-y-4">
           <div className="relative overflow-hidden rounded-lg">
             <img
-              src={`https://echoschribbie.pythonanywhere.com/uploads/${product.images}`  || "/placeholder.svg"}
+                                src={`https://echoschribbie.pythonanywhere.com/uploads/${product.image}`|| "/placeholder.svg"}
               alt={product.name}
               className="w-full h-96 object-cover"
             />
